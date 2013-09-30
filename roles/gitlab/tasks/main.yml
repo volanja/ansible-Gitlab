@@ -1,0 +1,30 @@
+- name: Download gitlab
+  git: repo=git://github.com/gitlabhq/gitlabhq.git dest=~/gitlab
+       version=6-1-stable
+
+- name: Cp config.yml
+  shell: cp config/gitlab.yml.example config/gitlab.yml chdir=~/gitlab
+
+- name: Cp config.yml
+  shell: cp config/unicorn.rb.example config/unicorn.rb chdir=~/gitlab
+
+- name: Cp .gitconfig
+  template: src=.gitconfig dest=~/.gitconfig mode=0664
+
+- name: Set Permission log
+  file: path=~/home/gitlab/log state=directory owner=git group=git mode=0775
+
+- name: Set Permission tmp
+  file: path=~/home/gitlab/tmp state=directory owner=git group=git mode=0775
+
+- name: Set Permission tmp/pids
+  file: path=~/home/gitlab/tmp/pids state=directory owner=git group=git mode=0775
+
+- name: Set Permission tmp/sockets
+  file: path=~/home/gitlab/tmp/sockets state=directory owner=git group=git mode=0775
+
+- name: Set Permission public/uploads
+  file: path=~/home/gitlab/public/uploads state=directory owner=git group=git mode=0775
+
+- name: mkdir satellites
+  file: path=~/gitlab-satellites state=directory owner=git group=git mode=0775

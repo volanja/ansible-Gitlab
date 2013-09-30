@@ -4,3 +4,4 @@
   roles:
     - ruby
     - gitlab-shell
+    - gitlab
