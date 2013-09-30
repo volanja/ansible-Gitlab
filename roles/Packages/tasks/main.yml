@@ -12,17 +12,17 @@
   yum: pkg='@development' state=latest
 
 - name: Install Vim
-  yum: pkg={{ item }} state=installed
+  yum: pkg={{ item }} state=present
   with_items:
     - vim
 
 - name: Install Git
-  yum: pkg={{ item }} state=installed
+  yum: pkg={{ item }} state=present
   with_items:
     - git-all
 
 - name: Install Ruby Dependency
-  yum: pkg={{ item }} state=installed enablerepo=epel 
+  yum: pkg={{ item }} state=present enablerepo=epel 
   with_items:
     - openssl-devel
     - zlib-devel
@@ -38,18 +38,24 @@
     - curl
 
 - name: Install Redis
-  yum: pkg={{ item }} state=installed enablerepo=remi enablerepo=epel
+  yum: pkg={{ item }} state=present enablerepo=remi enablerepo=epel
   with_items:
     - redis #in remi
     - gperftools-libs #in epel dependency
     - libunwind #in epql dependency
     - libunwind-devel #in epel ??
 
+- name: chkconfig on Redis
+  service: name=redis state=started enabled=yes
+
 - name: Install MariaDB
-  yum: pkg={{ item }} state=installed enablerepo=mariadb
+  yum: pkg={{ item }} state=present enablerepo=mariadb
   with_items:
     - MariaDB-server
     - MariaDB-client
     - MariaDB-common
     - MariaDB-compat
     - MariaDB-devel
+
+- name: chkconfig on MariaDB
+  service: name=mysql state=started enabled=yes
