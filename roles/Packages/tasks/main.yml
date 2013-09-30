@@ -3,7 +3,7 @@
   template: src=epel.repo dest=/etc/yum.repos.d/epel.repo mode=0644
 
 - name: Template remi.repo
-  template: src=epel.repo dest=/etc/yum.repos.d/remi.repo mode=0644
+  template: src=remi.repo dest=/etc/yum.repos.d/remi.repo mode=0644
 
 - name: Template mariadb.repo
   template: src=mariadb.repo dest=/etc/yum.repos.d/mariadb.repo mode=0644
