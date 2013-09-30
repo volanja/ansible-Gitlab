@@ -25,12 +25,27 @@ CentOS 6.4 64bit   (virtualbox + vagrantで構築)
 
 インストールするもの
 ------
-+ Gitlab 6.1
-+ ruby 1.9.3+
++ ruby 2.0.0p327
 + git 1.7.10+
 + redis 2.0+
 + MariaDB 5.5.33a
+
+以下はまだ未実施。  
++ Gitlab 6.1
 + Nginx
+
+実行手順
+----
+簡易版  
+hosts内に対象サーバのIPアドレスを入力しておくこと。  
+
+```
+ansible-playbook setup.yml -i hosts
+```
+
+```
+ansible-playbook setup_git.yml -i hosts
+```
 
 TODO
 -----
