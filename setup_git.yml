@@ -1,0 +1,5 @@
+- name: Install Gitlab
+  hosts: server
+  user: git
+  roles:
+    - ruby
