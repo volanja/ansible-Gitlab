@@ -1,0 +1,9 @@
+---
+- name: Add User git
+  user: name=git
+
+- name: Copy .gitconfig
+  template: src=.gitconfig dest=/home/git/.gitconfig mode=0664
+
+- name: Copy ssh_key
+  shell: cp /root/.ssh/authorized_keys /home/git/.ssh/authorized_keys && chown git:git /home/git/.ssh/authorized_keys && chmod 600 /home/git/.ssh/authorized_keys
