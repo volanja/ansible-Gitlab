@@ -3,3 +3,4 @@
   user: git
   roles:
     - ruby
+    - gitlab-shell
