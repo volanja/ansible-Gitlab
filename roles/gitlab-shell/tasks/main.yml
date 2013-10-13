@@ -1,5 +1,5 @@
 - name: Download gitlab-shell
-  git: repo=git://github.com/gitlabhq/gitlab-shell.git dest=~/gitlab-shell
+  git: repo=https://github.com/gitlabhq/gitlab-shell.git dest=~/gitlab-shell
        version=v1.7.1
 
 - name: Cp config.yml
