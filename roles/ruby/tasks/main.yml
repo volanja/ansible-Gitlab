@@ -1,5 +1,5 @@
 - name: Download rbenv
-  git: repo=git://github.com/sstephenson/rbenv.git dest=~/.rbenv
+  git: repo=https://github.com/sstephenson/rbenv.git dest=~/.rbenv
 
 - name: rbenv echo
   action: shell echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
@@ -8,7 +8,7 @@
   action: shell echo 'eval "$(rbenv init -)"' >> ~/.bashrc
 
 - name: Download ruby-build
-  git: repo=git://github.com/sstephenson/ruby-build.git dest=~/.rbenv/plugins/ruby-build
+  git: repo=https://github.com/sstephenson/ruby-build.git dest=~/.rbenv/plugins/ruby-build
 
 - name: Install ruby-build
   action: shell /bin/bash -c "export PREFIX=~/local/src/ &&  ~/.rbenv/plugins/ruby-build/install.sh" chdir=~/.rbenv/plugins/ruby-build
