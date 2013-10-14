@@ -1,0 +1,24 @@
+- name: Install MySQL-python
+  yum: pkg={{ item }} state=present
+  with_items:
+    - MySQL-python
+
+- name: update mysql root password for all root accounts
+  mysql_user: login_user=root login_password='' name=root host=$item password={{ mysql_root_password }}
+  with_items:
+    - $ansible_fqdn
+    - 127.0.0.1
+    - ::1
+    - localhost
+
+- name: copy .my.cnf file with root password credentials
+  template: src=my.cnf.j2 dest=~/.my.cnf mode=0600
+
+- name: delete anonymous MySQL server user for $server_hostname
+  mysql_user: user="" host="$ansible_fqdn" state="absent"
+
+- name: delete anonymous MySQL server user for localhost
+  mysql_user: user="" state="absent"
+
+- name: remove the MySQL test database
+  mysql_db: db=test state=absent
