@@ -1,14 +1,23 @@
+# database
+- name: add MySQL database {{ mysql_gitlab_database }}
+  mysql_db: db={{ mysql_gitlab_database }} state=present encoding=utf8 collation=utf8_unicode_ci
+
+- name: add MySQL server user for localhost
+  mysql_user: user=gitlab host=localhost password={{ mysql_gitlab_password }} state=present
+              priv="{{ mysql_gitlab_database }}.*:SELECT, LOCK TABLES, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER"
+
+# gitlab
 - name: Download gitlab
   git: repo=https://github.com/gitlabhq/gitlabhq.git dest=~/gitlab
        version=6-1-stable
 
-- name: Cp config.yml
+- name: Copy config/gitlab.yml
   shell: cp config/gitlab.yml.example config/gitlab.yml chdir=~/gitlab
 
-- name: Cp config.yml
+- name: Copy config/unicorn.rb
   shell: cp config/unicorn.rb.example config/unicorn.rb chdir=~/gitlab
 
-- name: Cp .gitconfig
+- name: Template .gitconfig
   template: src=.gitconfig dest=~/.gitconfig mode=0664
 
 - name: Set Permission log
@@ -28,3 +37,14 @@
 
 - name: mkdir satellites
   file: path=~/gitlab-satellites state=directory owner=git group=git mode=0775
+
+- name: Template config/database.yml
+  template: src=database.yml.mysql.j2 dest=~/gitlab/config/database.yml mode=0600
+
+# gem
+- name: Install Gems
+  gem: name=charlock_holmes version=0.6.9.4 state=present
+
+# bundle install
+- name: Install Bundle
+  shell: bundle install --deployment --without development test postgres aws chdir=~/gitlab
