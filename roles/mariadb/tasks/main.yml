@@ -1,8 +1,4 @@
-- name: Install MySQL-python
-  yum: pkg={{ item }} state=present
-  with_items:
-    - MySQL-python
-
+# mysql_secure_installation
 - name: update mysql root password for all root accounts
   mysql_user: login_user=root login_password='' name=root host=$item password={{ mysql_root_password }}
   with_items:
@@ -22,3 +18,11 @@
 
 - name: remove the MySQL test database
   mysql_db: db=test state=absent
+
+# gitlab
+- name: add MySQL database {{ mysql_gitlab_database }}
+  mysql_db: db={{ mysql_gitlab_database }} state=present encoding=utf8 collation=utf8_unicode_ci
+
+- name: add MySQL server user for localhost
+  mysql_user: user=gitlab host=localhost password={{ mysql_gitlab_password }} state=present
+              priv="{{ mysql_gitlab_database }}.*:SELECT, LOCK TABLES, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER"
