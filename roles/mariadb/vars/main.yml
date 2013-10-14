@@ -1,4 +1,2 @@
 ---
 mysql_root_password: password
-mysql_gitlab_password: password
-mysql_gitlab_database: gitlabhq_production
