@@ -8,6 +8,9 @@
 - name: Template mariadb.repo
   template: src=mariadb.repo dest=/etc/yum.repos.d/mariadb.repo mode=0644
 
+- name: Template nginx.repo
+  template: src=nginx.repo dest=/etc/yum.repos.d/nginx.repo mode=0644
+
 - name: Install(Group) development
   yum: pkg='@development' state=latest
 
@@ -60,3 +63,19 @@
 
 - name: chkconfig on MariaDB
   service: name=mysql state=started enabled=yes
+
+- name: install Nginx
+  yum: pkg={{ item }} state=installed enablerepo=nginx
+  with_items:
+    - nginx
+
+- name: Delete nginx/conf.d/default.conf
+  file: path=/etc/nginx/conf.d/default.conf state=absent
+
+- name: ensure nginx is running automatically at boot time
+  service: name=nginx state=started enabled=yes
+
+- name: insert iptables rule
+  lineinfile: dest=/etc/sysconfig/iptables state=present regexp="{{ www_port }}"
+              insertafter="^:OUTPUT " line="-A INPUT -p tcp --dport {{ www_port }} -j ACCEPT"
+  notify: restart iptables
