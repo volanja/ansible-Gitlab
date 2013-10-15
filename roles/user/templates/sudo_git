@@ -1,0 +1,2 @@
+Cmnd_Alias GIT = /bin/cp, /bin/chmod
+git	ALL=(ALL)	NOPASSWD:GIT

@@ -5,6 +5,9 @@
 - name: Copy .gitconfig
   template: src=.gitconfig dest=/home/git/.gitconfig mode=0664
 
+- name: Copy /etc/sudoers.d/sudo_git
+  template: src=sudo_git dest=/etc/sudoers.d/git mode=0440
+
 - name: Create ~/.ssh
   file: path=/home/git/.ssh state=directory
 
