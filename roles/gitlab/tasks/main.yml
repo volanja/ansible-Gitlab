@@ -41,6 +41,7 @@
 - name: Template config/database.yml
   template: src=database.yml.mysql.j2 dest=~/gitlab/config/database.yml mode=0600
 
+
 # gem
 - name: Install Gems
   gem: name=charlock_holmes version=0.6.9.4 state=present
@@ -48,3 +49,23 @@
 # bundle install
 - name: Install Bundle
   shell: bundle install --deployment --without development test postgres aws chdir=~/gitlab
+
+# Initialize Database and Activate Advanced Features
+# Force it to be silent (issue 31)
+- name: Initialize Database and Activate Advanced Features
+  shell: "export force=yes && bundle exec rake gitlab:setup RAILS_ENV=production chdir=~/gitlab"
+
+# Install Init Script
+- name: Install Init Script
+  shell: "sudo cp ~/gitlab/lib/support/init.d/gitlab /etc/init.d/gitlab && sudo chmod +x /etc/init.d/gitlab"
+
+- name: chkconfig on Gitlab
+  service: name=gitlab enabled=yes
+
+# Check Application Status
+- name: Check Application Status
+  shell: "bundle exec rake gitlab:env:info RAILS_ENV=production chdir=~/gitlab"
+
+# Double-check Application Status
+- name: Double-check Application Status
+  shell: "bundle exec rake gitlab:check RAILS_ENV=production chdir=~/gitlab"
