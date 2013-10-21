@@ -8,6 +8,8 @@ ansibleを使って、Gitの共有リポジトリを管理できるマシンを�
 
 [ansible](http://www.ansibleworks.com/)...サーバ構成管理ソフトウェア  
 
+![ソフトウェア構成図](https://raw.github.com/volanja/ansible-Gitlab/master/img/ansible-Gitlab.png)
+
 対象環境
 -----
 CentOS 6.4 64bit   (virtualbox + vagrantで構築)
