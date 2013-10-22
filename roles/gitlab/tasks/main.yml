@@ -56,11 +56,7 @@
   shell: "export force=yes && bundle exec rake gitlab:setup RAILS_ENV=production chdir=~/gitlab"
 
 # Install Init Script
-- name: Install Init Script
-  shell: "sudo cp ~/gitlab/lib/support/init.d/gitlab /etc/init.d/gitlab && sudo chmod +x /etc/init.d/gitlab"
-
-- name: chkconfig on Gitlab
-  service: name=gitlab enabled=yes
+# Copy in roles/Packages
 
 # Check Application Status
 - name: Check Application Status
