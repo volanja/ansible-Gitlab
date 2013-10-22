@@ -82,4 +82,14 @@
 - name: insert iptables rule
   lineinfile: dest=/etc/sysconfig/iptables state=present regexp="{{ www_port }}"
               insertafter="^:OUTPUT " line="-A INPUT -p tcp --dport {{ www_port }} -j ACCEPT"
+
+- name: Restart iptables
+  shell: restorecon /etc/sysconfig/iptables
   notify: restart iptables
+
+# Gitlab
+- name: Template /etc/init.d/gitlab
+  template: src=init_gitlab dest=/etc/init.d/gitlab mode=0755 owner=root group=root
+
+- name: ensure gitlab is running automatically at boot time
+  service: name=gitlab enabled=yes
