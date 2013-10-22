@@ -9,7 +9,7 @@
 # gitlab
 - name: Download gitlab
   git: repo=https://github.com/gitlabhq/gitlabhq.git dest=~/gitlab
-       version=6-1-stable
+       version=6-1-stable update=no
 
 - name: Copy config/gitlab.yml
   shell: cp config/gitlab.yml.example config/gitlab.yml chdir=~/gitlab
