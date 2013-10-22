@@ -14,7 +14,7 @@
   action: shell /bin/bash -c "export PREFIX=~/local/src/ &&  ~/.rbenv/plugins/ruby-build/install.sh" chdir=~/.rbenv/plugins/ruby-build
 
 - name: Install Ruby
-  action: shell rbenv install {{ ruby_ver }}
+  action: shell rbenv install {{ ruby_ver }} -f -k
 
 - name: rbenv global 
   action: shell rbenv global {{ ruby_ver }}
