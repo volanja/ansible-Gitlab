@@ -15,9 +15,6 @@
 # Description:       GitLab git repository management
 ### END INIT INFO
 
-# Source function library.
-. /etc/rc.d/init.d/functions
-
 ### Environment variables
 RAILS_ENV="production"
 

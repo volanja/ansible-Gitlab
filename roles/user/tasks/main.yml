@@ -13,3 +13,7 @@
 
 - name: Copy ssh_pub_key
   shell: cp /root/.ssh/authorized_keys /home/git/.ssh/authorized_keys && chown git:git /home/git/.ssh/authorized_keys && chmod 600 /home/git/.ssh/authorized_keys
+
+# Gitlab
+- name: Template /etc/init.d/gitlab
+  file: path=/etc/init.d/gitlab mode=0775 owner=git group=git
