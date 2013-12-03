@@ -23,7 +23,7 @@ CentOS 6.4 64bit   (virtualbox + vagrantで構築)
 	ruby 1.9.3p194 (2012-04-20 revision 35410) [x86_64-darwin11.4.2]
 
 	$ gem list |grep serverspec  
-	serverspec (0.7.12)
+	serverspec (0.13.0)
 
 インストールするもの
 ------
