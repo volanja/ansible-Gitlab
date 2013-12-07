@@ -1,3 +1,4 @@
 ---
 - name: rehash
   action: shell rbenv rehash
+  remote_user: git

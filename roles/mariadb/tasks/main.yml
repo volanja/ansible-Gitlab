@@ -6,15 +6,20 @@
     - 127.0.0.1
     - ::1
     - localhost
+  remote_user: git
 
 - name: copy .my.cnf file with root password credentials
   template: src=my.cnf.j2 dest=~/.my.cnf mode=0600
+  remote_user: git
 
 - name: delete anonymous MySQL server user for $server_hostname
   mysql_user: user="" host="$ansible_fqdn" state="absent"
+  remote_user: git
 
 - name: delete anonymous MySQL server user for localhost
   mysql_user: user="" state="absent"
+  remote_user: git
 
 - name: remove the MySQL test database
   mysql_db: db=test state=absent
+  remote_user: git

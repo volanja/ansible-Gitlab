@@ -1,59 +1,75 @@
 # database
 - name: add MySQL database {{ mysql_gitlab_database }}
   mysql_db: db={{ mysql_gitlab_database }} state=present encoding=utf8 collation=utf8_unicode_ci
+  remote_user: git
 
 - name: add MySQL server user for localhost
   mysql_user: user=gitlab host=localhost password={{ mysql_gitlab_password }} state=present
               priv="{{ mysql_gitlab_database }}.*:SELECT, LOCK TABLES, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER"
+  remote_user: git
 
 # gitlab
 - name: Download gitlab
   git: repo=https://github.com/gitlabhq/gitlabhq.git dest=~/gitlab
        version=6-1-stable update=no
+  remote_user: git
 
 - name: Copy config/gitlab.yml
   shell: cp config/gitlab.yml.example config/gitlab.yml chdir=~/gitlab
+  remote_user: git
 
 - name: Copy config/unicorn.rb
   shell: cp config/unicorn.rb.example config/unicorn.rb chdir=~/gitlab
+  remote_user: git
 
 - name: Template .gitconfig
   template: src=.gitconfig dest=~/.gitconfig mode=0664
+  remote_user: git
 
 - name: Set Permission log
   file: path=~/home/gitlab/log state=directory owner=git group=git mode=0775
+  remote_user: git
 
 - name: Set Permission tmp
   file: path=~/home/gitlab/tmp state=directory owner=git group=git mode=0775
+  remote_user: git
 
 - name: Set Permission tmp/pids
   file: path=~/home/gitlab/tmp/pids state=directory owner=git group=git mode=0775
+  remote_user: git
 
 - name: Set Permission tmp/sockets
   file: path=~/home/gitlab/tmp/sockets state=directory owner=git group=git mode=0775
+  remote_user: git
 
 - name: Set Permission public/uploads
   file: path=~/home/gitlab/public/uploads state=directory owner=git group=git mode=0775
+  remote_user: git
 
 - name: mkdir satellites
   file: path=~/gitlab-satellites state=directory owner=git group=git mode=0775
+  remote_user: git
 
 - name: Template config/database.yml
   template: src=database.yml.mysql.j2 dest=~/gitlab/config/database.yml mode=0600
+  remote_user: git
 
 
 # gem
 - name: Install Gems
   gem: name=charlock_holmes version=0.6.9.4 state=present
+  remote_user: git
 
 # bundle install
 - name: Install Bundle
   shell: bundle install --deployment --without development test postgres aws chdir=~/gitlab
+  remote_user: git
 
 # Initialize Database and Activate Advanced Features
 # Force it to be silent (issue 31)
 - name: Initialize Database and Activate Advanced Features
   shell: "export force=yes && bundle exec rake gitlab:setup RAILS_ENV=production chdir=~/gitlab"
+  remote_user: git
 
 # Install Init Script
 # Copy in roles/Packages
@@ -61,7 +77,9 @@
 # Check Application Status
 - name: Check Application Status
   shell: "bundle exec rake gitlab:env:info RAILS_ENV=production chdir=~/gitlab"
+  remote_user: git
 
 # Double-check Application Status
 - name: Double-check Application Status
   shell: "bundle exec rake gitlab:check RAILS_ENV=production chdir=~/gitlab"
+  remote_user: git
