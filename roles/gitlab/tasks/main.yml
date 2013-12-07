@@ -11,7 +11,7 @@
 # gitlab
 - name: Download gitlab
   git: repo=https://github.com/gitlabhq/gitlabhq.git dest=~/gitlab
-       version=6-1-stable update=no
+       version=6-3-stable update=no
   remote_user: git
 
 - name: Copy config/gitlab.yml
@@ -27,28 +27,16 @@
   remote_user: git
 
 - name: Set Permission log
-  file: path=~/home/gitlab/log state=directory owner=git group=git mode=0775
+  #file: path=~/home/gitlab/log state=directory owner=git group=git mode=0775
+  file: path={{ item }} state=directory owner=git group=git mode=0775
   remote_user: git
-
-- name: Set Permission tmp
-  file: path=~/home/gitlab/tmp state=directory owner=git group=git mode=0775
-  remote_user: git
-
-- name: Set Permission tmp/pids
-  file: path=~/home/gitlab/tmp/pids state=directory owner=git group=git mode=0775
-  remote_user: git
-
-- name: Set Permission tmp/sockets
-  file: path=~/home/gitlab/tmp/sockets state=directory owner=git group=git mode=0775
-  remote_user: git
-
-- name: Set Permission public/uploads
-  file: path=~/home/gitlab/public/uploads state=directory owner=git group=git mode=0775
-  remote_user: git
-
-- name: mkdir satellites
-  file: path=~/gitlab-satellites state=directory owner=git group=git mode=0775
-  remote_user: git
+  with_items:
+    - ~/home/gitlab/log
+    - ~/home/gitlab/tmp
+    - ~/home/gitlab/tmp/pids
+    - ~/home/gitlab/tmp/sockets
+    - ~/home/gitlab/public/uploads
+    - ~/gitlab-satellites
 
 - name: Template config/database.yml
   template: src=database.yml.mysql.j2 dest=~/gitlab/config/database.yml mode=0600
