@@ -1,9 +1,12 @@
 - name: Download gitlab-shell
   git: repo=https://github.com/gitlabhq/gitlab-shell.git dest=~/gitlab-shell
        version=v1.7.1
+  remote_user: git
 
 - name: Cp config.yml
   shell: cp config.yml.example config.yml chdir=~/gitlab-shell
+  remote_user: git
 
 - name: Run Install
   shell: bin/install chdir=~/gitlab-shell
+  remote_user: git

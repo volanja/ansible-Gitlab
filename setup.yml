@@ -2,5 +2,11 @@
   hosts: server
   user: root
   roles:
+    # for root
     - Packages
     - user
+    # for user
+    - mariadb
+    - ruby
+    - gitlab-shell
+    - gitlab
