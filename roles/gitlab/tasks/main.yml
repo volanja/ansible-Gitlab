@@ -71,3 +71,14 @@
 - name: Double-check Application Status
   shell: "bundle exec rake gitlab:check RAILS_ENV=production chdir=~/gitlab"
   remote_user: git
+
+# Add Gitlab as service
+- name: Template /etc/init.d/gitlab
+  template: src=init_gitlab dest=/etc/init.d/gitlab mode=0755 owner=root group=root
+
+- name: ensure gitlab is running automatically at boot time
+  service: name=gitlab state=started enabled=yes
+
+# Add Config for Nginx
+- name: Template nginx/conf.d/gitlab.conf
+  template: src=nginx_gitlab.conf.j2 dest=/etc/nginx/conf.d/gitlab.conf mode=0644

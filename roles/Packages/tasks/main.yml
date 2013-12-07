@@ -73,9 +73,6 @@
 - name: Delete nginx/conf.d/default.conf
   file: path=/etc/nginx/conf.d/default.conf state=absent
 
-- name: Template nginx/conf.d/gitlab.conf
-  template: src=nginx_gitlab.conf.j2 dest=/etc/nginx/conf.d/gitlab.conf mode=0644
-
 - name: ensure nginx is running automatically at boot time
   service: name=nginx state=started enabled=yes
 
@@ -87,9 +84,3 @@
   shell: restorecon /etc/sysconfig/iptables
   notify: restart iptables
 
-# Gitlab
-- name: Template /etc/init.d/gitlab
-  template: src=init_gitlab dest=/etc/init.d/gitlab mode=0755 owner=root group=root
-
-- name: ensure gitlab is running automatically at boot time
-  service: name=gitlab enabled=yes
