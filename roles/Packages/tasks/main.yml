@@ -41,7 +41,7 @@
     - curl
 
 - name: Install Redis
-  yum: pkg={{ item }} state=present enablerepo=remi enablerepo=epel
+  yum: pkg={{ item }} state=present enablerepo=remi,epel
   with_items:
     - redis #in remi
     - gperftools-libs #in epel dependency
