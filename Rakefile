@@ -3,10 +3,12 @@ require 'rspec/core/rake_task'
 
 hosts = [
   {
+    :name  => '192.168.0.108',
     :user  => 'root',
     :roles => %w( Packages ),
   },
   {
+    :name  => '192.168.0.108',
     :user  => 'git',
     :roles => %w( gitlab ),
   },
@@ -14,6 +16,7 @@ hosts = [
 
 hosts = hosts.map do |host|
   {
+    :name       => host[:name],
     :user       => host[:user],
     :roles      => host[:roles],
   }
@@ -27,6 +30,7 @@ namespace :serverspec do
   hosts.each do |host|
     desc "Run serverspec for #{host[:user]}"
     RSpec::Core::RakeTask.new(host[:user].to_sym) do |t|
+      ENV['TARGET_NAME'] = host[:name]
       ENV['TARGET_USER'] = host[:user]
       t.pattern = 'spec/*/{' + host[:roles].join(',') + '}/*_spec.rb'
     end
