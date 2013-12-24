@@ -46,17 +46,25 @@ clone後、hostsファイル内の対象サーバのIPアドレスを変更し�
 次のコマンドで実行します。  
 ```
 $ ansible-playbook setup.yml -i hosts  
-$ ansible-playbook setup_git.yml -i hosts
 ```
 
 4. テストの準備  
 Serverspecで行います。  
-spec/default をspec/xxx.xxx.xxx.xxxと変更してください。
+spec/properties.ymlのIPアドレス、秘密鍵を修正してください。
+
+```spec/spec.yml
+root:
+  roles:
+    - Packages
+    - gitlab
+  ip: 192.168.0.108
+  private_key: ~/.ssh/id_rsa
+```
 
 5. テストの実行  
 次のコマンドで実行します。  
 ```
-$ rake spec
+$ rake serverspec       # Run serverspec to all hosts
 ```
 
 6. 再起動  
@@ -74,3 +82,8 @@ ID```admin@local.host```
 リンク
 -----
 + [Gitlab](http://gitlab.org/)
+
+謝辞
+-----
+作成にあたり、以下のサイトを参考にさせて頂きました。
++ [serverspec インフラ層のテスト項目を考える](https://hiroakis.com/blog/2013/12/24/serverspec-%E3%82%A4%E3%83%B3%E3%83%95%E3%83%A9%E5%B1%A4%E3%81%AE%E3%83%86%E3%82%B9%E3%83%88%E9%A0%85%E7%9B%AE%E3%82%92%E8%80%83%E3%81%88%E3%82%8B/)
