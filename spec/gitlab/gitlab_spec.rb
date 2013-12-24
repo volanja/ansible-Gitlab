@@ -49,10 +49,10 @@ describe file('/etc/nginx/conf.d/gitlab.conf') do
 end
 
 ## permisson
-describe command("-u git ls -ltad /home/git/gitlab/log |awk '{print $1}'") do
+describe command("ls -ltad /home/git/gitlab/log |awk '{print $1}'") do
   it { should return_stdout 'drwxrwxr-x' }
 end
 
-describe command("-u git ls -ltad /home/git/gitlab/tmp |awk '{print $1}'") do
+describe command("ls -ltad /home/git/gitlab/tmp |awk '{print $1}'") do
   it { should return_stdout 'drwxrwxr-x' }
 end

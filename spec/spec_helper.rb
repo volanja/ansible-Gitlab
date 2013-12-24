@@ -19,13 +19,13 @@ RSpec.configure do |c|
     else
       file = block.source_location.first
     end
-    host  = ENV['TARGET_NAME']
+    host  = ENV['TARGET_HOST']
     if c.host != host
       c.ssh.close if c.ssh
       c.host  = host
       options = Net::SSH::Config.for(c.host)
       user    = ENV['TARGET_USER']
-      options[:keys] = '~/.ssh/id_rsa'
+      options[:keys] = ENV['TARGET_PRIVATE_KEY']
       c.ssh   = Net::SSH.start(host, user, options)
     end
   end
