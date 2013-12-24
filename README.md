@@ -45,10 +45,8 @@ clone後、hostsファイル内の対象サーバのIPアドレスを変更し�
 対象サーバにSSH公開鍵認証方式でログイン出来るように準備してください。
 
 3. ansible playbook 実行  
-
-対象サーバのドメイン名を次のファイルに定義(デフォルトはcadence)してください。
+対象サーバのドメイン名を次のファイルに定義(デフォルトはcadence)してください。  
 Windows/Linuxではhostsファイルの書き換えにより、アクセスするようにします。
-
 ```
 +----------------------------------------------------------------------------+
 |             File             |          Key          |        Value        |
@@ -57,9 +55,7 @@ Windows/Linuxではhostsファイルの書き換えにより、アクセスす�
 | roles/hostname/vars/main.yml | server_name           | cadence             |
 +----------------------------------------------------------------------------+
 ```
-
 次のコマンドで実行します。  
-
 ```
 $ ansible-playbook setup.yml -i hosts  
 ```
@@ -67,7 +63,6 @@ $ ansible-playbook setup.yml -i hosts
 4. テストの準備  
 Serverspecで行います。  
 spec/properties.ymlのIPアドレス、秘密鍵を修正してください。
-
 ```spec/spec.yml
 root:
   roles:
@@ -84,26 +79,18 @@ $ rake serverspec       # Run serverspec to all hosts
 ```
 
 6. Gitlabへのアクセス  
-あらかじめhostsファイルを次のように変更しておきます。
-Windows... C:/Windows/System32/drivers/etc/hosts
+あらかじめhostsファイルを次のように変更しておきます。  
+Windows... C:/Windows/System32/drivers/etc/hosts  
 Linux,Mac... /etc/hosts
-
 ```
 192.168.0.108 gitlab.cadence
 ```
-
 次のURLでアクセスできます。  
-
 ```
 http://gitlab.cadence/  
+ID...admin@local.host  
+パスワード...5iveL!fe
 ```
-
-ID```admin@local.host```  
-パスワード```5iveL!fe```
-
-リンク
------
-+ [Gitlab](http://gitlab.org/)
 
 謝辞
 -----
