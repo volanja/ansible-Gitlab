@@ -29,7 +29,7 @@ CentOS 6.4 64bit   (virtualbox + vagrantで構築)
 
 インストールするもの
 ------
-+ ruby 2.0.0p327
++ ruby 2.0.0p353
 + git 1.7.10+
 + redis 2.0+
 + MariaDB 5.5.33a
