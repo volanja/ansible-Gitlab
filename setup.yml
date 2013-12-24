@@ -3,6 +3,7 @@
   user: root
   roles:
     # for root
+    - hostname
     - Packages
     - user
     # for user
