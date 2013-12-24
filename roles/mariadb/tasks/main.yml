@@ -7,6 +7,7 @@
     - ::1
     - localhost
   remote_user: git
+  ignore_errors: yes
 
 - name: copy .my.cnf file with root password credentials
   template: src=my.cnf.j2 dest=~/.my.cnf mode=0600
