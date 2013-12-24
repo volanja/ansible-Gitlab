@@ -1,3 +1,5 @@
 ---
 mysql_gitlab_password: password
 mysql_gitlab_database: gitlabhq_production
+
+server_name: cadence
