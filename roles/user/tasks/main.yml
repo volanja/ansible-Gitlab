@@ -1,6 +1,6 @@
 ---
 - name: Add User git
-  user: name=git
+  user: name=git group=git
 
 - name: Copy .gitconfig
   template: src=.gitconfig dest=/home/git/.gitconfig mode=0664
