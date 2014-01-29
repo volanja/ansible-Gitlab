@@ -92,7 +92,12 @@ ID...admin@local.host
 パスワード...5iveL!fe
 ```
 
+プラグイン
+----
+[プラグイン](docs/plugins.md)
+
 謝辞
 -----
 作成にあたり、以下のサイトを参考にさせて頂きました。
 + [serverspec インフラ層のテスト項目を考える](https://hiroakis.com/blog/2013/12/24/serverspec-%E3%82%A4%E3%83%B3%E3%83%95%E3%83%A9%E5%B1%A4%E3%81%AE%E3%83%86%E3%82%B9%E3%83%88%E9%A0%85%E7%9B%AE%E3%82%92%E8%80%83%E3%81%88%E3%82%8B/)
++ [gitlab 6.2簡単インストール](https://gist.github.com/hiroaki256/8142865)
