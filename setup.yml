@@ -11,3 +11,4 @@
     - ruby
     - gitlab-shell
     - gitlab
+    - gitlab-plugins
