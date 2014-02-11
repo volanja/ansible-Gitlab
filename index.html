@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ansible-gitlab by volanja</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Ansible-gitlab</h1>
+        <p>Gitlab by ansible</p>
+
+        <p class="view"><a href="https://github.com/volanja/ansible-Gitlab">View the Project on GitHub <small>volanja/ansible-Gitlab</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/volanja/ansible-Gitlab/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/volanja/ansible-Gitlab/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/volanja/ansible-Gitlab">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="ansible-gitlab" class="anchor" href="#ansible-gitlab"><span class="octicon octicon-link"></span></a>ansible-Gitlab</h1>
+
+<p>ansibleを使って、Gitの共有リポジトリを管理できるマシンを構築します。<br>
+以下のソフトウェアをインストールします。  </p>
+
+<p><a href="http://gitlab.org/">Gitlab</a>…Ruby製のGit管理サーバソフトウェア  </p>
+
+<p><a href="http://www.ansibleworks.com/">ansible</a>...サーバ構成管理ソフトウェア  </p>
+
+<p>アクセスはサブドメイン(gitlab.cadence)で行います。</p>
+
+<p><img src="https://raw.github.com/volanja/ansible-Gitlab/master/img/ansible-Gitlab.png" alt="ソフトウェア構成図"></p>
+
+<h2>
+<a name="%E5%AF%BE%E8%B1%A1%E7%92%B0%E5%A2%83" class="anchor" href="#%E5%AF%BE%E8%B1%A1%E7%92%B0%E5%A2%83"><span class="octicon octicon-link"></span></a>対象環境</h2>
+
+<p>CentOS 6.4 64bit   (virtualbox + vagrantで構築)</p>
+
+<h2>
+<a name="%E5%AE%9F%E8%A1%8C%E7%92%B0%E5%A2%83" class="anchor" href="#%E5%AE%9F%E8%A1%8C%E7%92%B0%E5%A2%83"><span class="octicon octicon-link"></span></a>実行環境</h2>
+
+<pre><code>$ ansible --version  
+ansible 1.4.1 (1.4.1 7bf799af65) last updated 2013/11/30 14:23:28 (GMT +900)
+
+$ ruby -v  
+ruby 2.0.0p353 (2013-11-22 revision 43784) [x86_64-darwin11.4.2]
+
+$ gem list |grep serverspec  
+serverspec (0.13.2)
+</code></pre>
+
+<h2>
+<a name="%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB%E3%81%99%E3%82%8B%E3%82%82%E3%81%AE" class="anchor" href="#%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB%E3%81%99%E3%82%8B%E3%82%82%E3%81%AE"><span class="octicon octicon-link"></span></a>インストールするもの</h2>
+
+<ul>
+<li>ruby 2.0.0p353 (/home/git配下にrbenvでインストール)</li>
+<li>git 1.7.10+</li>
+<li>redis 2.0+</li>
+<li>MariaDB 5.5.33a</li>
+<li>Gitlab 6.3</li>
+<li>Nginx</li>
+</ul><h2>
+<a name="%E5%AE%9F%E8%A1%8C%E6%89%8B%E9%A0%86" class="anchor" href="#%E5%AE%9F%E8%A1%8C%E6%89%8B%E9%A0%86"><span class="octicon octicon-link"></span></a>実行手順</h2>
+
+<ol>
+<li><p>hostsファイルの設定変更<br>
+clone後、hostsファイル内の対象サーバのIPアドレスを変更してください。</p></li>
+<li><p>SSH公開鍵認証の準備<br>
+対象サーバにSSH公開鍵認証方式でログイン出来るように準備してください。</p></li>
+<li><p>ansible playbook 実行<br>
+対象サーバのドメイン名を次のファイルに定義(デフォルトはcadence)してください。<br>
+Windows/Linuxからはhostsファイルの書き換えにより、アクセスするようにします。</p></li>
+</ol><pre><code>+----------------------------------------------------------------------------+
+|             File             |          Key          |        Value        |
++----------------------------------------------------------------------------+
+| roles/gitlab/vars/main.yml   | server_name           | cadence             |
+| roles/hostname/vars/main.yml | server_name           | cadence             |
++----------------------------------------------------------------------------+
+</code></pre>
+
+<p>次のコマンドで実行します。  </p>
+
+<pre><code>$ ansible-playbook setup.yml -i hosts  
+</code></pre>
+
+<ol>
+<li>テストの準備<br>
+Serverspecで行います。<br>
+spec/properties.ymlのIPアドレス、秘密鍵を修正してください。</li>
+</ol><pre lang="spec/spec.yml"><code>root:
+  roles:
+    - Packages
+    - gitlab
+  ip: 192.168.0.108
+  private_key: ~/.ssh/id_rsa
+</code></pre>
+
+<ol>
+<li>テストの実行<br>
+次のコマンドで実行します。<br>
+</li>
+</ol><pre><code>$ rake serverspec       # Run serverspec to all hosts
+</code></pre>
+
+<ol>
+<li>Gitlabへのアクセス<br>
+あらかじめhostsファイルを次のように変更しておきます。<br>
+Windows... C:/Windows/System32/drivers/etc/hosts<br>
+Linux,Mac... /etc/hosts</li>
+</ol><pre><code>192.168.0.108 gitlab.cadence
+</code></pre>
+
+<p>次のURLでアクセスできます。  </p>
+
+<pre><code>http://gitlab.cadence/  
+ID...admin@local.host  
+パスワード...5iveL!fe
+</code></pre>
+
+<h2>
+<a name="%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3" class="anchor" href="#%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3"><span class="octicon octicon-link"></span></a>プラグイン</h2>
+
+<p><a href="docs/plugins.md">プラグイン</a></p>
+
+<h2>
+<a name="%E8%AC%9D%E8%BE%9E" class="anchor" href="#%E8%AC%9D%E8%BE%9E"><span class="octicon octicon-link"></span></a>謝辞</h2>
+
+<p>作成にあたり、以下のサイトを参考にさせて頂きました。</p>
+
+<ul>
+<li><a href="https://hiroakis.com/blog/2013/12/24/serverspec-%E3%82%A4%E3%83%B3%E3%83%95%E3%83%A9%E5%B1%A4%E3%81%AE%E3%83%86%E3%82%B9%E3%83%88%E9%A0%85%E7%9B%AE%E3%82%92%E8%80%83%E3%81%88%E3%82%8B/">serverspec インフラ層のテスト項目を考える</a></li>
+<li><a href="https://gist.github.com/hiroaki256/8142865">gitlab 6.2簡単インストール</a></li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/volanja">volanja</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
