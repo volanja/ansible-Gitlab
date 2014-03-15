@@ -1,4 +1,4 @@
-- name: Install Gitlab
+- name: Install-Gitlab
   hosts: server
   user: root
   roles:
