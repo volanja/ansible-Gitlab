@@ -60,25 +60,13 @@ Windows/Linuxからはhostsファイルの書き換えにより、アクセス�
 $ ansible-playbook site.yml -i hosts  
 ```
 
-4. テストの準備  
-Serverspecで行います。  
-spec/properties.ymlのIPアドレス、秘密鍵を修正してください。
-```spec/spec.yml
-root:
-  roles:
-    - Packages
-    - gitlab
-  ip: 192.168.0.108
-  private_key: ~/.ssh/id_rsa
-```
-
-5. テストの実行  
+4. テストの実行  
 次のコマンドで実行します。  
 ```
-$ rake serverspec       # Run serverspec to all hosts
+$ rake serverspec:Install-Gitlab
 ```
 
-6. Gitlabへのアクセス  
+5. Gitlabへのアクセス  
 あらかじめhostsファイルを次のように変更しておきます。  
 Windows... C:/Windows/System32/drivers/etc/hosts  
 Linux,Mac... /etc/hosts
