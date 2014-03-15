@@ -1,0 +1,20 @@
+---
+
+- name: modify gitlab max_size
+  lineinfile: "dest=/home/git/gitlab/config/gitlab.yml state=present regexp='^ *max_size'
+              line='    max_size: 524288000 # 500.megabytes'"
+  remote_user: git
+  tags: max
+
+- name: modify nginx max_size
+  lineinfile: "dest=/etc/nginx/conf.d/gitlab.conf state=present regexp='^ *client_max_body_size'
+              insertafter='^ *error_log.*' line='  client_max_body_size 500M;'"
+  tags: max
+
+- name: restart gitlab
+  service: name=gitlab state=restarted
+  tags: max
+
+- name: restart nginx
+  service: name=nginx state=restarted
+  tags: max
