@@ -1,6 +1,0 @@
-root:
-  roles:
-    - Packages
-    - gitlab
-  ip: 192.168.0.108
-  private_key: ~/.ssh/id_rsa

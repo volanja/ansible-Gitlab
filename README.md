@@ -57,7 +57,7 @@ Windows/Linuxからはhostsファイルの書き換えにより、アクセス�
 ```
 次のコマンドで実行します。  
 ```
-$ ansible-playbook setup.yml -i hosts  
+$ ansible-playbook site.yml -i hosts  
 ```
 
 4. テストの準備  
