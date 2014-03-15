@@ -1,2 +1,3 @@
 ---
 - include: omniauth-redmine.yml
+- include: git-max-size.yml
