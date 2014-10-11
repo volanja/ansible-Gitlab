@@ -3,7 +3,10 @@
   replace: dest=/etc/redis.conf regexp='^port .*' replace='port 0' backup=yes
 
 - name: Enable Redis socket
-  replace: dest=/etc/redis.conf regexp='^# unixsocket .*' replace='unixsocket /var/run/redis/redis.sock' backup=yes
+  replace: dest=/etc/redis.conf regexp='.*unixsocket .*' replace='unixsocket /var/run/redis/redis.sock' backup=yes
+
+- name: Enable Redis socket permission
+  replace: dest=/etc/redis.conf regexp='.*unixsocketperm .*' replace='unixsocketperm 707' backup=yes
 
 - name: restart redis
   service: name=redis state=restarted
