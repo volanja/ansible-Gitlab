@@ -3,11 +3,11 @@
   remote_user: git
 
 - name: rbenv echo
-  action: shell echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+  shell: echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
   remote_user: git
 
 - name: rbenv echo
-  action: shell echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+  shell: echo 'eval "$(rbenv init -)"' >> ~/.bashrc
   remote_user: git
 
 - name: Download ruby-build
@@ -15,19 +15,19 @@
   remote_user: git
 
 - name: Install ruby-build
-  action: shell /bin/bash -c "export PREFIX=~/local/src/ &&  ~/.rbenv/plugins/ruby-build/install.sh" chdir=~/.rbenv/plugins/ruby-build
+  shell: /bin/bash -c "export PREFIX=~/local/src/ &&  ~/.rbenv/plugins/ruby-build/install.sh" chdir=~/.rbenv/plugins/ruby-build
   remote_user: git
 
 - name: Install Ruby
-  action: shell MAKE_OPTS="-j 4" rbenv install {{ ruby_ver }} -f -k
+  shell: MAKE_OPTS="-j 4" rbenv install {{ ruby_ver }} -f -k
   remote_user: git
 
 - name: rbenv global 
-  action: shell rbenv global {{ ruby_ver }}
+  shell: rbenv global {{ ruby_ver }}
   notify: rehash
   remote_user: git
 
 - name: gem install
-  action: shell rbenv exec gem install bundler --no-ri --no-rdoc
+  shell: rbenv exec gem install bundler --no-ri --no-rdoc
   notify: rehash
   remote_user: git
