@@ -12,3 +12,5 @@
     - gitlab-shell
     - gitlab
     - gitlab-plugins
+  vars:
+    gitlab_version: 7-0-stable

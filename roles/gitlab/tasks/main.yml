@@ -11,7 +11,7 @@
 # gitlab
 - name: Download gitlab
   git: repo=https://github.com/gitlabhq/gitlabhq.git dest=~/gitlab
-       version=6-3-stable update=no
+       version={{ gitlab_version }} update=no
   remote_user: git
 
 - name: Copy config/gitlab.yml
@@ -73,8 +73,14 @@
   remote_user: git
 
 # Add Gitlab as service
-- name: Template /etc/init.d/gitlab
-  template: src=init_gitlab dest=/etc/init.d/gitlab mode=0755 owner=root group=root
+#- name: Template /etc/init.d/gitlab
+#  template: src=init_gitlab dest=/etc/init.d/gitlab mode=0755 owner=root group=root
+
+- name: Copy /etc/init.d/gitlab
+  shell: cp lib/support/init.d/gitlab /etc/init.d/gitlab chdir=~/gitlab
+
+- name: Persmisson
+  shell: "chmod 755 /etc/init.d/gitlab && chown root:root /etc/init.d/gitlab"
 
 - name: ensure gitlab is running automatically at boot time
   service: name=gitlab state=started enabled=yes
