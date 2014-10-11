@@ -3,7 +3,7 @@
   user: name=git
 
 - name: Copy .gitconfig
-  template: src=.gitconfig dest=/home/git/.gitconfig mode=0664
+  template: src=.gitconfig dest=/home/git/.gitconfig mode=0664 owner=git group=git
 
 - name: Copy /etc/sudoers.d/sudo_git
   template: src=sudo_git dest=/etc/sudoers.d/git mode=0440
@@ -13,6 +13,9 @@
 
 - name: Copy ssh_pub_key
   shell: cp /root/.ssh/authorized_keys /home/git/.ssh/authorized_keys
+
+- name: Set Permission
+  file: path=/home/git/.ssh mode=0700 owner=git group=git
 
 - name: Set Permission
   file: path=/home/git/.ssh/authorized_keys mode=0600 owner=git group=git

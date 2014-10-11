@@ -22,10 +22,6 @@
   shell: cp config/unicorn.rb.example config/unicorn.rb chdir=~/gitlab
   remote_user: git
 
-- name: Template .gitconfig
-  template: src=.gitconfig dest=~/.gitconfig mode=0664
-  remote_user: git
-
 - name: Set Permission log
   #file: path=~/home/gitlab/log state=directory owner=git group=git mode=0775
   file: path={{ item }} state=directory owner=git group=git mode=0775

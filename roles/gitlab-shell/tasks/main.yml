@@ -1,6 +1,6 @@
 - name: Download gitlab-shell
   git: repo=https://github.com/gitlabhq/gitlab-shell.git dest=~/gitlab-shell
-       version=v1.7.1
+       version={{ gitlab_shell_version }}
   remote_user: git
 
 - name: Cp config.yml
