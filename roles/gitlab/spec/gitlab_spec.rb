@@ -17,31 +17,31 @@ describe file('/home/git/repositories') do
   it { should be_directory }
 end
 
-describe service('gitlab') do
-  it { should be_enabled   }
-  it { should be_running   }
-end
-
-## network
-describe file('/home/git/gitlab/tmp/sockets/gitlab.socket') do
-  it { should be_socket }
-end
-
-describe port(8080) do
-  it { should be_listening }
-end
-
 # file
-describe file('/home/git/gitlab/config/database.yml') do
+describe file('/home/git/gitlab/config/gitlab.yml') do
   it { should be_file }
 end
 
-describe file('/home/git/gitlab/config/gitlab.yml') do
+describe file('/home/git/gitlab/config/unicorn.rb') do
+  it { should be_file }
+end
+
+describe file('/home/git/gitlab/config/initializers/rack_attack.rb') do
+  it { should be_file }
+end
+
+describe file('/home/git/gitlab/config/resque.yml') do
+  it { should be_file }
+end
+
+describe file('/home/git/gitlab/config/database.yml') do
   it { should be_file }
 end
 
 describe file('/etc/init.d/gitlab') do
   it { should be_file }
+  it { should be_mode 755 }
+  it { should be_owned_by 'root' }
 end
 
 describe file('/etc/nginx/conf.d/gitlab.conf') do
@@ -55,4 +55,18 @@ end
 
 describe command("ls -ltad /home/git/gitlab/tmp |awk '{print $1}'") do
   it { should return_stdout 'drwxrwxr-x' }
+end
+
+describe service('gitlab') do
+  it { should be_enabled   }
+  it { should be_running   }
+end
+
+## network
+describe file('/home/git/gitlab/tmp/sockets/gitlab.socket') do
+  it { should be_socket }
+end
+
+describe port(8080) do
+  it { should be_listening }
 end
