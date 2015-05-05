@@ -14,5 +14,5 @@
     - gitlab
     - gitlab-plugins
   vars:
-    gitlab_version: v7.3.2
+    gitlab_version: v7.10.1
     gitlab_shell_version: v2.0.1

@@ -14,7 +14,7 @@ ansibleを使って、Gitの共有リポジトリを管理できるマシンを�
 
 対象環境
 -----
-CentOS 6.4 64bit   (virtualbox + vagrantで構築)
+CentOS 6.x 64bit   (virtualbox + vagrantで構築)
 
 実行環境
 -----
@@ -32,9 +32,12 @@ CentOS 6.4 64bit   (virtualbox + vagrantで構築)
 + ruby 2.0.0p353 (/home/git配下にrbenvでインストール)
 + git 1.7.10+
 + redis 2.0+
++ Gitlab 7.10.1
++ PostgresSQL 9.4.1
++ Nginx 1.6.2
+
+GitlabがPostgreSQL推奨なので、PostgreSQLで動くようにしています。
 + MariaDB 5.5.33a
-+ Gitlab 6.3
-+ Nginx
 
 実行手順
 ----
