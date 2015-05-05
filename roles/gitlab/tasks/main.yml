@@ -4,7 +4,7 @@
   remote_user: git
 
 - name: add MySQL server user for localhost
-  mysql_user: user=gitlab host=localhost password={{ mysql_gitlab_password }} state=present
+  mysql_user: user=git host=localhost password={{ mysql_gitlab_password }} state=present
               priv="{{ mysql_gitlab_database }}.*:SELECT, LOCK TABLES, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER"
   remote_user: git
 
@@ -14,16 +14,20 @@
        version={{ gitlab_version }} update=no
   remote_user: git
 
-- name: Copy config/gitlab.yml
+- name: Copy the example GitLab config
   shell: cp config/gitlab.yml.example config/gitlab.yml chdir=~/gitlab
   remote_user: git
 
-- name: Copy config/unicorn.rb
+- name: Copy the example Unicorn config
   shell: cp config/unicorn.rb.example config/unicorn.rb chdir=~/gitlab
   remote_user: git
 
-- name: Template .gitconfig
-  template: src=.gitconfig dest=~/.gitconfig mode=0664
+- name: Copy the example Rack attack config
+  shell: cp config/initializers/rack_attack.rb.example config/initializers/rack_attack.rb chdir=~/gitlab
+  remote_user: git
+
+- name: Copy the example resque config. Configure Redis connection settings
+  shell: cp config/resque.yml.example config/resque.yml chdir=~/gitlab
   remote_user: git
 
 - name: Set Permission log
@@ -49,6 +53,18 @@
   remote_user: git
 
 # bundle install
+- name: Add source "http://production.s3.rubygems.org"
+  lineinfile: dest=/home/git/gitlab/Gemfile
+              insertbefore=BOF
+              line='source "http://production.s3.rubygems.org"'
+
+- name: Install cmake for rugged
+  yum: pkg=cmake state=present
+
+- name: Bundle config parallel
+  shell: bundle config --global --jobs 4 chdir=~/gitlab
+  remote_user: git
+
 - name: Install Bundle
   shell: bundle install --deployment --without development test postgres aws chdir=~/gitlab
   remote_user: git
@@ -59,31 +75,40 @@
   shell: "export force=yes && bundle exec rake gitlab:setup RAILS_ENV=production chdir=~/gitlab"
   remote_user: git
 
-# Install Init Script
-# Copy in roles/Packages
-
-# Check Application Status
 - name: Check Application Status
   shell: "bundle exec rake gitlab:env:info RAILS_ENV=production chdir=~/gitlab"
+  remote_user: git
+  register: res_info
+
+- debug: var=res_info.stderr | to_nice_yaml
+- debug: var=res_info.stdout_lines | to_nice_yaml
+
+- name: Compile Assets
+  shell: "bundle exec rake assets:precompile RAILS_ENV=production chdir=~/gitlab"
   remote_user: git
 
 # Double-check Application Status
 - name: Double-check Application Status
   shell: "bundle exec rake gitlab:check RAILS_ENV=production chdir=~/gitlab"
   remote_user: git
+  register: res_check
+
+- debug: var=res_check.stderr | to_nice_yaml
+- debug: var=res_check.stdout_lines | to_nice_yaml
 
 # Add Gitlab as service
-#- name: Template /etc/init.d/gitlab
-#  template: src=init_gitlab dest=/etc/init.d/gitlab mode=0755 owner=root group=root
-
 - name: Copy /etc/init.d/gitlab
-  shell: cp lib/support/init.d/gitlab /etc/init.d/gitlab chdir=~/gitlab
+  shell: cp /home/git/gitlab/lib/support/init.d/gitlab /etc/init.d/gitlab
 
 - name: Persmisson
-  shell: "chmod 755 /etc/init.d/gitlab && chown root:root /etc/init.d/gitlab"
+  file: path=/etc/init.d/gitlab mode=0755 owner=root group=root
 
 - name: ensure gitlab is running automatically at boot time
   service: name=gitlab state=started enabled=yes
+
+# Logrotate
+- name: Copy the example logrotate config
+  shell: cp /home/git/gitlab/lib/support/logrotate/gitlab /etc/logrotate.d/gitlab
 
 # Add Config for Nginx
 - name: Template nginx/conf.d/gitlab.conf
