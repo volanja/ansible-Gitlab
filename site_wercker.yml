@@ -1,0 +1,18 @@
+- name: Install-Gitlab
+  hosts: server
+  user: root
+  roles:
+    # for root
+    #- hostname
+    - Packages
+    - user
+    # for user
+    - mariadb
+    #- ruby
+    - redis
+    - gitlab-shell
+    - gitlab
+    - gitlab-plugins
+  vars:
+    gitlab_version: v7.10.1
+    gitlab_shell_version: v2.0.1
