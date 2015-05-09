@@ -20,17 +20,16 @@ build:
           if [[ -e $WERCKER_CACHE_DIR/nsenter.tar ]]; then cat $WERCKER_CACHE_DIR/nsenter.tar | docker import - jpetazzo/nsenter ; docker load --input $WERCKER_CACHE_DIR/nsenter.tar ; else docker pull jpetazzo/nsenter ; docker save -o $WERCKER_CACHE_DIR/nsenter.tar jpetazzo/nsenter ; fi
           #docker pull jpetazzo/nsenter
     - script:
-        name: Get information of DockerImage(gem)
-        code: |
-          echo 'gem list' | /usr/local/bin/docker-enter target
-          echo 'gem list' | /usr/local/bin/docker-enter serv
-    - script:
         name: docker run
         code: |
           docker run --rm -v /usr/local/bin:/target jpetazzo/nsenter
           docker run -d -P --cap-add=NET_ADMIN --hostname=cadence -v `pwd`/ssh:/var/tmp:rw --name target volanja/docker-ruby2.2.0
-          echo 'service sshd restart; mkdir /root/.ssh/ ; cat /var/tmp/authorized_keys >> /root/.ssh/authorized_keys' | /usr/local/bin/docker-enter target
           docker run -d -P --name serv --link target:dest -v `pwd`:/root:rw -v `pwd`/ssh:/var/tmp:rw -t volanja/docker-ansible
+    - script:
+        name: run Ansible
+        code: |
+          echo 'gem list' | /usr/local/bin/docker-enter serv
+          echo 'service sshd restart; mkdir /root/.ssh/ ; cat /var/tmp/authorized_keys >> /root/.ssh/authorized_keys' | /usr/local/bin/docker-enter target
           echo 'env; mkdir ~/.ssh; cp /var/tmp/id_rsa_docker ~/.ssh/id_rsa ; chmod 600 ~/.ssh/id_rsa ' | /usr/local/bin/docker-enter serv
           echo 'cd /root; ansible-playbook site_wercker.yml -i hosts_wercker' | /usr/local/bin/docker-enter serv
           echo 'cd /root; rake serverspec:Install-Gitlab' | /usr/local/bin/docker-enter serv
