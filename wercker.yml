@@ -20,6 +20,11 @@ build:
           if [[ -e $WERCKER_CACHE_DIR/nsenter.tar ]]; then cat $WERCKER_CACHE_DIR/nsenter.tar | docker import - jpetazzo/nsenter ; docker load --input $WERCKER_CACHE_DIR/nsenter.tar ; else docker pull jpetazzo/nsenter ; docker save -o $WERCKER_CACHE_DIR/nsenter.tar jpetazzo/nsenter ; fi
           #docker pull jpetazzo/nsenter
     - script:
+        name: Get information of DockerImage(gem)
+        code: |
+          echo 'gem list' | /usr/local/bin/docker-enter target
+          echo 'gem list' | /usr/local/bin/docker-enter serv
+    - script:
         name: docker run
         code: |
           docker run --rm -v /usr/local/bin:/target jpetazzo/nsenter
