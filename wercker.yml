@@ -1,0 +1,35 @@
+box: wercker-labs/docker
+no-response-timeout: 20
+build:
+  steps:
+    - script:
+        name: docker version
+        code: |
+          docker -v
+          mkdir `pwd`/ssh
+          ssh-keygen -f `pwd`/ssh/id_rsa_docker -N ''
+          cat `pwd`/ssh/id_rsa_docker.pub >> `pwd`/ssh/authorized_keys
+          ls -R
+    - script:
+        name: docker pull
+        code: |
+          if [[ -e $WERCKER_CACHE_DIR/docker-ruby2.2.0.tar ]]; then cat $WERCKER_CACHE_DIR/docker-ruby2.2.0.tar | docker import - volanja/docker-ruby2.2.0 ; docker load --input $WERCKER_CACHE_DIR/docker-ruby2.2.0.tar ; else docker pull volanja/docker-ruby2.2.0 ; docker save -o $WERCKER_CACHE_DIR/docker-ruby2.2.0.tar volanja/docker-ruby2.2.0 ; fi
+          #docker pull volanja/docker-ruby2.2.0
+          if [[ -e $WERCKER_CACHE_DIR/docker-ansible.tar ]]; then cat $WERCKER_CACHE_DIR/docker-ansible.tar | docker import - volanja/docker-ansible ; docker load --input $WERCKER_CACHE_DIR/docker-ansible.tar ; else docker pull volanja/docker-ansible ; docker save -o $WERCKER_CACHE_DIR/docker-ansible.tar volanja/docker-ansible ; fi
+          #docker pull volanja/docker-ansible
+          if [[ -e $WERCKER_CACHE_DIR/nsenter.tar ]]; then cat $WERCKER_CACHE_DIR/nsenter.tar | docker import - jpetazzo/nsenter ; docker load --input $WERCKER_CACHE_DIR/nsenter.tar ; else docker pull jpetazzo/nsenter ; docker save -o $WERCKER_CACHE_DIR/nsenter.tar jpetazzo/nsenter ; fi
+          #docker pull jpetazzo/nsenter
+    - script:
+        name: docker run
+        code: |
+          docker run --rm -v /usr/local/bin:/target jpetazzo/nsenter
+          docker run -d -P --cap-add=NET_ADMIN --hostname=cadence -v `pwd`/ssh:/var/tmp:rw --name target volanja/docker-ruby2.2.0
+          docker run -d -P --name serv --link target:dest -v `pwd`:/root:rw -v `pwd`/ssh:/var/tmp:rw -t volanja/docker-ansible
+    - script:
+        name: run Ansible
+        code: |
+          echo 'gem list' | /usr/local/bin/docker-enter serv
+          echo 'service sshd restart; mkdir /root/.ssh/ ; cat /var/tmp/authorized_keys >> /root/.ssh/authorized_keys' | /usr/local/bin/docker-enter target
+          echo 'env; mkdir ~/.ssh; cp /var/tmp/id_rsa_docker ~/.ssh/id_rsa ; chmod 600 ~/.ssh/id_rsa ' | /usr/local/bin/docker-enter serv
+          echo 'cd /root; ansible-playbook site_wercker.yml -i hosts_wercker' | /usr/local/bin/docker-enter serv
+          echo 'cd /root; rake serverspec:Install-Gitlab' | /usr/local/bin/docker-enter serv
