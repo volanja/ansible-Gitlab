@@ -35,6 +35,12 @@
 - name: Template config/database.yml
   template: src=database.yml.mysql.j2 dest=~/gitlab/config/database.yml mode=0600
   remote_user: git
+  when: db == 'mariadb'
+
+- name: Template config/database.yml
+  template: src=database.yml.postgresql.j2 dest=~/gitlab/config/database.yml mode=0600
+  remote_user: git
+  when: db == 'postgresql'
 
 
 # gem

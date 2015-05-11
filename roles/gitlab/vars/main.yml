@@ -1,5 +1,8 @@
 ---
 mysql_gitlab_password: password
 mysql_gitlab_database: gitlabhq_production
+pg_user: git
+pg_user_password: my_password
+pg_database: gitlabhq_production
 
 server_name: cadence
