@@ -43,10 +43,10 @@
   remote_user: git
 
 # bundle install
-- name: Add source "http://production.s3.rubygems.org"
-  lineinfile: dest=/home/git/gitlab/Gemfile
-              insertbefore=BOF
-              line='source "http://production.s3.rubygems.org"'
+#- name: Add source "http://production.s3.rubygems.org"
+#  lineinfile: dest=/home/git/gitlab/Gemfile
+#              insertbefore=BOF
+#              line='source "http://production.s3.rubygems.org"'
 
 - name: Install cmake for rugged
   yum: pkg=cmake state=present
@@ -56,7 +56,7 @@
   remote_user: git
 
 - name: Install Bundle
-  shell: bundle install --deployment --without development test postgres aws chdir=~/gitlab
+  shell: bundle install --deployment --without development test mysql aws chdir=~/gitlab
   remote_user: git
 
 # Initialize Database and Activate Advanced Features
