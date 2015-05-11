@@ -56,7 +56,7 @@
   remote_user: git
 
 - name: Install pg
-  shell: bundle config build.pg --with-pg-config=/usr/pgsql-9.4/bin/pg_config chdir=~/redmine
+  shell: bundle config build.pg --with-pg-config=/usr/pgsql-9.4/bin/pg_config chdir=~/gitlab
   remote_user: git
   when: db == 'postgresql'
 
