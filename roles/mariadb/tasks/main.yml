@@ -24,3 +24,12 @@
 - name: remove the MySQL test database
   mysql_db: db=test state=absent
   remote_user: git
+
+- name: add MySQL database {{ mysql_gitlab_database }}
+  mysql_db: db={{ mysql_gitlab_database }} state=present encoding=utf8 collation=utf8_unicode_ci
+  remote_user: git
+
+- name: add MySQL server user for localhost
+  mysql_user: user=git host=localhost password={{ mysql_gitlab_password }} state=present
+              priv="{{ mysql_gitlab_database }}.*:SELECT, LOCK TABLES, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER"
+  remote_user: git

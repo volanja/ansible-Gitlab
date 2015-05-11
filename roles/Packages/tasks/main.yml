@@ -5,9 +5,6 @@
 - name: Template remi.repo
   template: src=remi.repo dest=/etc/yum.repos.d/remi.repo mode=0644
 
-- name: Template mariadb.repo
-  template: src=mariadb.repo dest=/etc/yum.repos.d/mariadb.repo mode=0644
-
 - name: Template nginx.repo
   template: src=nginx.repo dest=/etc/yum.repos.d/nginx.repo mode=0644
 
@@ -51,18 +48,13 @@
 - name: chkconfig on Redis
   service: name=redis state=started enabled=yes
 
-- name: Install MariaDB
-  yum: pkg={{ item }} state=present enablerepo=mariadb
-  with_items:
-    - MariaDB-server
-    - MariaDB-client
-    - MariaDB-common
-    - MariaDB-compat
-    - MariaDB-devel
-    - MySQL-python
+# Database
+# mariadb or postgresql
+- include: mariadb.yml
+  when: db == 'mariadb'
 
-- name: chkconfig on MariaDB
-  service: name=mysql state=started enabled=yes
+- include: postgresql.yml
+  when: db == 'postgresql'
 
 # Nginx
 - name: install Nginx

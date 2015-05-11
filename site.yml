@@ -7,12 +7,15 @@
     - Packages
     - user
     # for user
-    - mariadb
+    - postgresql
+    #- mariadb
     - ruby
     - redis
     - gitlab-shell
     - gitlab
     - gitlab-plugins
   vars:
+    db: postgresql
+    #db: mariadb
     gitlab_version: v7.10.1
     gitlab_shell_version: v2.0.1

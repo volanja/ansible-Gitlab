@@ -1,0 +1,4 @@
+---
+pg_user: git
+pg_user_password: my_password
+pg_database: gitlabhq_production

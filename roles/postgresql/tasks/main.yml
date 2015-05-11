@@ -1,0 +1,19 @@
+# Create django user and grant access to database and products table
+# CREATE ROLE redmine LOGIN ENCRYPTED PASSWORD 'my_password' NOINHERIT VALID UNTIL 'infinity';
+- postgresql_user: name={{ pg_user }}
+                   password={{ pg_user_password }}
+                   role_attr_flags=NOINHERIT
+  sudo: yes
+  sudo_user: postgres
+# Create a new database with name "acme" and specific encoding and locale
+# settings. If a template different from "template0" is specified, encoding
+# and locale settings must match those of the template.
+# CREATE DATABASE redmine WITH ENCODING='UTF8' OWNER=redmine;
+- postgresql_db: name={{ pg_database }}
+                 encoding='UTF-8'
+                 owner={{ pg_user }}
+                 lc_collate='ja_JP.UTF-8'
+                 lc_ctype='ja_JP.UTF-8'
+                 template='template0'
+  sudo: yes
+  sudo_user: postgres

@@ -1,0 +1,22 @@
+---
+# PostgreSQL
+- name: Install pgdg
+  yum: name={{ item }} state=present
+  with_items:
+    - http://yum.postgresql.org/9.4/redhat/rhel-6-x86_64/pgdg-centos94-9.4-1.noarch.rpm
+
+- name: Install PostgreSQL
+  yum: name={{ item }} state=present enablerepo=pgdg94
+  with_items:
+    - postgresql94-server
+    - postgresql94-devel
+    - python-psycopg2
+    - libpqxx
+    - libpqxx-devel
+
+- name: Initialize Database
+  shell: service postgresql-9.4 initdb
+         creates=/var/lib/pgsql/9.4/data/postgresql.conf
+
+- name: chkconfig on PostgreSQL and service start
+  service: name=postgresql-9.4 state=started enabled=yes
