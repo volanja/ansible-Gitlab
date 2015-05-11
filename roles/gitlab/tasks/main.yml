@@ -42,6 +42,10 @@
   gem: name=charlock_holmes version=0.6.9.4 state=present
   remote_user: git
 
+- name: Install Gem pg
+  gem: name=pg state=present
+  remote_user: git
+
 # bundle install
 #- name: Add source "http://production.s3.rubygems.org"
 #  lineinfile: dest=/home/git/gitlab/Gemfile
