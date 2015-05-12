@@ -13,8 +13,8 @@ build:
     - script:
         name: docker pull
         code: |
-          if [[ -e $WERCKER_CACHE_DIR/docker-ruby2.2.0.tar ]]; then cat $WERCKER_CACHE_DIR/docker-ruby2.2.0.tar | docker import - volanja/docker-ruby2.2.0 ; docker load --input $WERCKER_CACHE_DIR/docker-ruby2.2.0.tar ; else docker pull volanja/docker-ruby2.2.0 ; docker save -o $WERCKER_CACHE_DIR/docker-ruby2.2.0.tar volanja/docker-ruby2.2.0 ; fi
-          #docker pull volanja/docker-ruby2.2.0
+          if [[ -e $WERCKER_CACHE_DIR/docker-ruby2.1.6.tar ]]; then cat $WERCKER_CACHE_DIR/docker-ruby2.1.6.tar | docker import - volanja/docker-ruby2.1.6 ; docker load --input $WERCKER_CACHE_DIR/docker-ruby2.1.6.tar ; else docker pull volanja/docker-ruby2.1.6 ; docker save -o $WERCKER_CACHE_DIR/docker-ruby2.1.6.tar volanja/docker-ruby2.1.6 ; fi
+          #docker pull volanja/docker-ruby2.1.6
           if [[ -e $WERCKER_CACHE_DIR/docker-ansible.tar ]]; then cat $WERCKER_CACHE_DIR/docker-ansible.tar | docker import - volanja/docker-ansible ; docker load --input $WERCKER_CACHE_DIR/docker-ansible.tar ; else docker pull volanja/docker-ansible ; docker save -o $WERCKER_CACHE_DIR/docker-ansible.tar volanja/docker-ansible ; fi
           #docker pull volanja/docker-ansible
           if [[ -e $WERCKER_CACHE_DIR/nsenter.tar ]]; then cat $WERCKER_CACHE_DIR/nsenter.tar | docker import - jpetazzo/nsenter ; docker load --input $WERCKER_CACHE_DIR/nsenter.tar ; else docker pull jpetazzo/nsenter ; docker save -o $WERCKER_CACHE_DIR/nsenter.tar jpetazzo/nsenter ; fi
@@ -23,7 +23,7 @@ build:
         name: docker run
         code: |
           docker run --rm -v /usr/local/bin:/target jpetazzo/nsenter
-          docker run -d -P --cap-add=NET_ADMIN --hostname=cadence -v `pwd`/ssh:/var/tmp:rw --name target volanja/docker-ruby2.2.0
+          docker run -d -P --cap-add=NET_ADMIN --hostname=cadence -v `pwd`/ssh:/var/tmp:rw --name target volanja/docker-ruby2.1.6
           docker run -d -P --name serv --link target:dest -v `pwd`:/root:rw -v `pwd`/ssh:/var/tmp:rw -t volanja/docker-ansible
     - script:
         name: run Ansible
