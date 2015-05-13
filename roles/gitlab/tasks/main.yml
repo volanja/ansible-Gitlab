@@ -1,3 +1,10 @@
+# install
+- name: Install Gitlab Dependency
+  yum: name={{ item }} state=present enablerepo=epel
+  with_items:
+    - nodejs
+    - npm
+
 # gitlab
 - name: Download gitlab
   git: repo=https://github.com/gitlabhq/gitlabhq.git dest=~/gitlab
