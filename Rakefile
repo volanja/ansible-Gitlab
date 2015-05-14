@@ -1,67 +1,33 @@
 require 'rake'
 require 'rspec/core/rake_task'
 require 'yaml'
+require 'ansible_spec'
 
-# param: inventory file of Ansible
-# return: Hash {"active_group_name" => ["192.168.0.1","192.168.0.2"]}
-def load_host(file)
-  if File.exist?(file) == false
-    puts 'Error: Please create inventory file. name MUST "hosts"'
-    exit
-  end
-  hosts = File.open(file).read
-  active_group = Hash.new
-  active_group_name = ''
-  hosts.each_line{|line|
-    line = line.chomp
-    next if line.start_with?('#')
-    if line.start_with?('[') && line.end_with?(']')
-      active_group_name = line.gsub('[','').gsub(']','')
-      active_group["#{active_group_name}"] = Array.new
-    elsif active_group_name.empty? == false
-      next if line.empty? == true
-      active_group["#{active_group_name}"] << line
-    end
-  }
-  return active_group
-end
-
-load_file = YAML.load_file('site.yml')
-
-# e.g. comment-out
-if load_file === false
-  puts 'Error: No data in site.yml'
-  exit
-end
-
-properties = Array.new
-load_file.each do |site|
-  if site.has_key?("include")
-    properties.push YAML.load_file(site["include"])[0]
-  else
-    properties.push site
-  end
-end
-
-
-#load inventry file
-hosts = load_host('hosts')
-properties.each do |var|
-  if hosts.has_key?("#{var["hosts"]}")
-    var["hosts"] = hosts["#{var["hosts"]}"]
-  end
-end
+properties = AnsibleSpec.get_properties
+# {"name"=>"Ansible-Sample-TDD", "hosts"=>["192.168.0.103","192.168.0.103"], "user"=>"root", "roles"=>["nginx", "mariadb"]}
+# {"name"=>"Ansible-Sample-TDD", "hosts"=>[{"name" => "192.168.0.103:22","uri"=>"192.168.0.103","port"=>22, "private_key"=> "~/.ssh/id_rsa"}], "user"=>"root", "roles"=>["nginx", "mariadb"]}
 
 namespace :serverspec do
-  properties.each do |var|
-    var["hosts"].each do |host|
-      desc "Run serverspec for #{var["name"]}"
-      RSpec::Core::RakeTask.new(var["name"].to_sym) do |t|
-        puts "Run serverspec for #{var["name"]} to #{host}"
-        ENV['TARGET_HOST'] = host
-        ENV['TARGET_PRIVATE_KEY'] = '~/.ssh/id_rsa'
-        ENV['TARGET_USER'] = var["user"]
-        t.pattern = 'roles/{' + var["roles"].join(',') + '}/spec/*_spec.rb'
+  properties.each do |property|
+    property["hosts"].each do |host|
+      desc "Run serverspec for #{property["name"]}"
+      RSpec::Core::RakeTask.new(property["name"].to_sym) do |t|
+        puts "Run serverspec for #{property["name"]} to #{host}"
+        if host.instance_of?(Hash)
+          ENV['TARGET_HOST'] = host["uri"]
+          ENV['TARGET_PORT'] = host["port"].to_s
+          ENV['TARGET_PRIVATE_KEY'] = host["private_key"]
+          unless host["user"].nil?
+            ENV['TARGET_USER'] = host["user"]
+          else
+            ENV['TARGET_USER'] = property["user"]
+          end
+        else
+          ENV['TARGET_HOST'] = host
+          ENV['TARGET_PRIVATE_KEY'] = '~/.ssh/id_rsa'
+          ENV['TARGET_USER'] = property["user"]
+        end
+        t.pattern = 'roles/{' + property["roles"].join(',') + '}/spec/*_spec.rb'
       end
     end
   end

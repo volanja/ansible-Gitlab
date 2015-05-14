@@ -1,4 +1,4 @@
 --- 
 - 
-  playbook: site.yml
-  inventory: hosts
+  playbook: site_wercker.yml
+  inventory: hosts_wercker
