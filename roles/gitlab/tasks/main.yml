@@ -39,12 +39,12 @@
     - ~/home/gitlab/public/uploads
     - ~/gitlab-satellites
 
-- name: Template config/database.yml
+- name: Template config/database.yml for mariadb
   template: src=database.yml.mysql.j2 dest=~/gitlab/config/database.yml mode=0600
   remote_user: git
   when: db == 'mariadb'
 
-- name: Template config/database.yml
+- name: Template config/database.yml for postgresql
   template: src=database.yml.postgresql.j2 dest=~/gitlab/config/database.yml mode=0600
   remote_user: git
   when: db == 'postgresql'
