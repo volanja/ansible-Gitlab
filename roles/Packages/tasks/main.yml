@@ -49,10 +49,7 @@
   service: name=redis state=started enabled=yes
 
 # Database
-# mariadb or postgresql
-- include: mariadb.yml
-  when: db == 'mariadb'
-
+#postgresql
 - include: postgresql.yml
   when: db == 'postgresql'
 
