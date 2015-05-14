@@ -48,11 +48,6 @@
 - name: chkconfig on Redis
   service: name=redis state=started enabled=yes
 
-# Database
-#postgresql
-- include: postgresql.yml
-  when: db == 'postgresql'
-
 # Nginx
 - name: install Nginx
   yum: pkg={{ item }} state=installed enablerepo=nginx
