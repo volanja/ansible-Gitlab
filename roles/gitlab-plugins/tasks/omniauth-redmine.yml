@@ -4,9 +4,15 @@
               insertafter="^gem 'omniauth-github'" line="gem 'omniauth-redmine', :github => 'suer/omniauth-redmine'"
   remote_user: git
 
-- name: bundle install
+- name: bundle install for postgresql
   command: chdir=~/gitlab bundle install --path .bundle --no-deployment --without development test mysql aws 
   remote_user: git
+  when: db == 'postgresql'
+
+- name: bundle install for mariadb
+  command: chdir=~/gitlab bundle install --path .bundle --no-deployment --without development test postgres aws 
+  remote_user: git
+  when: db == 'mariadb'
 
 - name: modify oauth ebabled
   template: src=omniauth-redmine/gitlab.yml.j2 dest={{ gitlab_dir }}/config/gitlab.yml backup=yes
