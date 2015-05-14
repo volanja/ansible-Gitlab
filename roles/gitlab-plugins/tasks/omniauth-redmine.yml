@@ -5,7 +5,7 @@
   remote_user: git
 
 - name: bundle install
-  command: chdir=~/gitlab bundle install --path .bundle --no-deployment --without development test postgres aws 
+  command: chdir=~/gitlab bundle install --path .bundle --no-deployment --without development test mysql aws 
   remote_user: git
 
 - name: modify oauth ebabled
